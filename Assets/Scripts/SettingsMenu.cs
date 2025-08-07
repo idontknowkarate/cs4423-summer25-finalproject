@@ -8,7 +8,7 @@ public class SettingsMenu : MonoBehaviour
 {
     [Header("Audio")]
     public AudioMixer audioMixer;
-    public Slider masterSlider, musicSlider, sfxSlider;
+    public Slider masterSlider, sfxSlider;
 
     [Header("Resolution")]
     public TMP_Dropdown resolutionDropdown;
@@ -58,12 +58,6 @@ public class SettingsMenu : MonoBehaviour
         PlayerPrefs.SetFloat("MasterVolume", volume);
     }
 
-    public void SetMusicVolume(float volume)
-    {
-        audioMixer.SetFloat("MusicVolume", Mathf.Log10(volume) * 20);
-        PlayerPrefs.SetFloat("MusicVolume", volume);
-    }
-
     public void SetSFXVolume(float volume)
     {
         audioMixer.SetFloat("SFXVolume", Mathf.Log10(volume) * 20);
@@ -94,9 +88,8 @@ public class SettingsMenu : MonoBehaviour
 
     public void ResetToDefault()
     {
-        masterSlider.value = 0.75f;
-        musicSlider.value = 0.75f;
-        sfxSlider.value = 0.75f;
+        masterSlider.value = 0.5f;
+        sfxSlider.value = 0.5f;
 
         fullscreenToggle.isOn = true;
         resolutionDropdown.value = currentResolutionIndex;
@@ -107,15 +100,12 @@ public class SettingsMenu : MonoBehaviour
     void LoadVolumeSettings()
     {
         float master = PlayerPrefs.GetFloat("MasterVolume", 0.75f);
-        float music = PlayerPrefs.GetFloat("MusicVolume", 0.75f);
         float sfx = PlayerPrefs.GetFloat("SFXVolume", 0.75f);
 
         masterSlider.value = master;
-        musicSlider.value = music;
         sfxSlider.value = sfx;
 
         SetMasterVolume(master);
-        SetMusicVolume(music);
         SetSFXVolume(sfx);
     }
 }
