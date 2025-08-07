@@ -66,6 +66,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float brakePitch = 0.8f;
     [SerializeField] private float pitchChangeSpeed = 2f;
 
+    private WorldScroller worldScroller;
+
     // bounds in viewport
     private float minViewportX = 0.1f;
     private float maxViewportX = 0.9f;
@@ -82,6 +84,8 @@ public class PlayerMovement : MonoBehaviour
             mainCamera = Camera.main;
 
         currentBoost = maxBoost;
+
+        worldScroller = FindObjectOfType<WorldScroller>();
     }
 
     void Update()
@@ -134,6 +138,16 @@ public class PlayerMovement : MonoBehaviour
 
         // FOV
         mainCamera.fieldOfView = Mathf.Lerp(mainCamera.fieldOfView, targetFOV, Time.deltaTime * fovTransitionSpeed);
+
+        if (worldScroller != null)
+        {
+            if (Input.GetKey(KeyCode.LeftShift) && canBoost)
+                worldScroller.speedMultiplier = boostMultiplier;
+            else if (Input.GetKey(KeyCode.LeftControl))
+                worldScroller.speedMultiplier = decelMultiplier;
+            else
+                worldScroller.speedMultiplier = 1f;
+        }
 
         // mouse-follow logic
         FollowMouse();

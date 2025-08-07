@@ -1,26 +1,36 @@
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
 
 public class MissionTracker : MonoBehaviour
 {
-    public float missionDuration = 20f;
-    private float elapsedTime = 0f;
+    public WorldScroller worldScroller;      // Assign in Inspector
+    public float distanceToComplete = 1000f; // How far the world should scroll
+    private Vector3 startPos;
     private bool missionEnded = false;
 
-    private void Update()
+    void Start()
     {
-        if (missionEnded) return;
+        if (worldScroller != null)
+        {
+            startPos = worldScroller.transform.position;
+        }
+    }
 
-        elapsedTime += Time.deltaTime;
+    void Update()
+    {
+        if (missionEnded || worldScroller == null) return;
 
-        if (elapsedTime >= missionDuration)
+        float scrolledDistance = startPos.z - worldScroller.transform.position.z;
+
+        if (scrolledDistance >= distanceToComplete)
         {
             missionEnded = true;
 
             GameOverManager go = FindObjectOfType<GameOverManager>();
-            go.TriggerMissionComplete();
-            go.ShowMedalForScore();
+            if (go != null)
+            {
+                go.TriggerMissionComplete();
+                go.ShowMedalForScore();
+            }
         }
     }
 }

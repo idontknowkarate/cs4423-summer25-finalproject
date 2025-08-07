@@ -19,6 +19,7 @@ public class GameOverManager : MonoBehaviour
     public Sprite bronzeMedal;
     public Sprite silverMedal;
     public Sprite goldMedal;
+    public GameObject missionCompleteUI;
 
     public int bronzeScore = 4;
     public int silverScore = 8;
@@ -45,7 +46,6 @@ public class GameOverManager : MonoBehaviour
         SFXManager.instance.StopAllSFX();
         StopAllAudioInScene();
 
-        // ✅ NEW LINE
         missionCompleteUI?.SetActive(false);
 
         gameOverUI.SetActive(true);
@@ -74,8 +74,6 @@ public class GameOverManager : MonoBehaviour
         SceneManager.LoadScene("MainMenu");
     }
 
-    public GameObject missionCompleteUI; // assign a "Mission Complete" screen
-
     public void TriggerMissionComplete()
     {
         if (gameHasEnded) return;
@@ -94,9 +92,6 @@ public class GameOverManager : MonoBehaviour
         Time.timeScale = 0f;
         SFXManager.instance.StopAllSFX();
         StopAllAudioInScene();
-
-        // ✅ NEW LINE
-        gameOverUI?.SetActive(false);
 
         missionCompleteUI.SetActive(true);
     }

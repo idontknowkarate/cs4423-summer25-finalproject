@@ -220,7 +220,6 @@ GameObject:
   - component: {fileID: 6072124222826907348}
   - component: {fileID: 5145944609571745306}
   - component: {fileID: 6121718569503261732}
-  - component: {fileID: 1517045195776878853}
   - component: {fileID: 7021982326972041839}
   m_Layer: 0
   m_Name: Turret
@@ -261,8 +260,8 @@ MonoBehaviour:
   turretBasePivot: {fileID: 4958072564697026356}
   cannonPivot: {fileID: 4055827051160660026}
   radarDishPivot: {fileID: 2509145517850475811}
-  rotateSpeed: 30
-  elevationSpeed: 30
+  rotateSpeed: 100
+  elevationSpeed: 100
   radarSpinSpeed: 180
 --- !u!114 &5145944609571745306
 MonoBehaviour:
@@ -290,7 +289,7 @@ MonoBehaviour:
   - {fileID: 8114450852059062325}
   audioSource: {fileID: 1710890576071128032}
   shootingSFX: {fileID: 8300000, guid: f9eb8f59cfae39c46a9bff0cc450054c, type: 3}
-  firingRange: 100
+  firingRange: 50
 --- !u!114 &6121718569503261732
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -312,19 +311,6 @@ MonoBehaviour:
   explosionSFX: {fileID: 8300000, guid: 6c63b511adff20e4ab86f9111051a1c2, type: 3}
   explosionVolume: 0.1
   lockOnReticlePrefab: {fileID: 8413606663313402545, guid: d916eca68bfbb4d4197a6de8ebd70095, type: 3}
---- !u!114 &1517045195776878853
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3649375568157851287}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c6bd215f5af72544a1e79b289dad680, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  scrollSpeed: 10
 --- !u!54 &7021982326972041839
 Rigidbody:
   m_ObjectHideFlags: 0

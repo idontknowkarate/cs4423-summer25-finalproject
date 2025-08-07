@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections.Generic;
 
 public class SettingsMenu : MonoBehaviour
 {
@@ -29,15 +30,22 @@ public class SettingsMenu : MonoBehaviour
         var options = new System.Collections.Generic.List<string>();
         int currentResolutionIndex = 0;
 
+        HashSet<string> seenResolutions = new HashSet<string>();
+
         for (int i = 0; i < resolutions.Length; i++)
         {
             string option = resolutions[i].width + " x " + resolutions[i].height;
-            options.Add(option);
+
+            if (!seenResolutions.Contains(option))
+            {
+                seenResolutions.Add(option);
+                options.Add(option);
+            }
 
             if (resolutions[i].width == Screen.currentResolution.width &&
                 resolutions[i].height == Screen.currentResolution.height)
             {
-                currentResolutionIndex = i;
+                currentResolutionIndex = options.Count - 1;
             }
         }
 
@@ -139,14 +147,25 @@ public class SettingsMenu : MonoBehaviour
 
     public void ConfirmSettings()
     {
-        confirmPopup.SetActive(false);
+        // apply all settings
+        SetMasterVolume(masterVolumeSlider.value);
+        SetSFXVolume(sfxVolumeSlider.value);
+        SetResolution(resolutionDropdown.value);
+        SetFullscreen(fullscreenToggle.isOn);
 
-        // save new "original" values so popup doesn't show next time
+        // save new values as "original" to prevent unnecessary prompts next time
         originalMasterVol = masterVolumeSlider.value;
         originalSFXVol = sfxVolumeSlider.value;
         originalResIndex = resolutionDropdown.value;
         originalFullscreen = fullscreenToggle.isOn;
 
+        PlayerPrefs.SetFloat("MasterVolume", originalMasterVol);
+        PlayerPrefs.SetFloat("SFXVolume", originalSFXVol);
+        PlayerPrefs.SetInt("ResolutionIndex", originalResIndex);
+        PlayerPrefs.SetInt("Fullscreen", originalFullscreen ? 1 : 0);
+
+        // hide popup and close settings
+        confirmPopup.SetActive(false);
         CloseSettingsPanel();
     }
 
