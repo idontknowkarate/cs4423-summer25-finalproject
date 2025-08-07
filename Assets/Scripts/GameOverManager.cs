@@ -1,13 +1,28 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using TMPro;
 
 public class GameOverManager : MonoBehaviour
 {
     public Animator fadeAnimator;
     public GameObject gameOverUI;
+    public GameObject settingsUI;
     public float delayBeforeFade = 2f;
     public float delayAfterFade = 1.5f;
+    public AudioClip buttonClickClip;
+    public Transform sfxSpawnPoint; // Optional
+
+    [Header("Medal System")]
+    public Image medalImage;
+    public Sprite bronzeMedal;
+    public Sprite silverMedal;
+    public Sprite goldMedal;
+
+    public int bronzeScore = 4;
+    public int silverScore = 8;
+    public int goldScore = 12;
 
     private bool gameHasEnded = false;
 
@@ -22,14 +37,17 @@ public class GameOverManager : MonoBehaviour
     {
         yield return new WaitForSeconds(delayBeforeFade);
 
-        // start fade animation
         fadeAnimator.SetTrigger("FadeOut");
 
         yield return new WaitForSeconds(delayAfterFade);
 
-        Time.timeScale = 0f; // freeze the game
+        Time.timeScale = 0f;
         SFXManager.instance.StopAllSFX();
         StopAllAudioInScene();
+
+        // ✅ NEW LINE
+        missionCompleteUI?.SetActive(false);
+
         gameOverUI.SetActive(true);
     }
 
@@ -45,9 +63,15 @@ public class GameOverManager : MonoBehaviour
 
     public void Retry()
     {
+        PlayButtonSFX();
         Time.timeScale = 1f;
-
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void Quit()
+    {
+        PlayButtonSFX();
+        SceneManager.LoadScene("MainMenu");
     }
 
     public GameObject missionCompleteUI; // assign a "Mission Complete" screen
@@ -70,12 +94,48 @@ public class GameOverManager : MonoBehaviour
         Time.timeScale = 0f;
         SFXManager.instance.StopAllSFX();
         StopAllAudioInScene();
+
+        // ✅ NEW LINE
+        gameOverUI?.SetActive(false);
+
         missionCompleteUI.SetActive(true);
+    }
+
+    public void PlayButtonSFX()
+    {
+        if (buttonClickClip != null && SFXManager.instance != null)
+        {
+            Transform spawnAt = sfxSpawnPoint != null ? sfxSpawnPoint : transform;
+            SFXManager.instance.PlaySFXClip(buttonClickClip, spawnAt, 1f);
+        }
     }
 
     public void OpenSettings()
     {
-        Debug.Log("Settings button clicked!");
-        // TODO: Show settings UI    
+        Debug.Log("OpenSettings() called from Game Over");
+        PlayButtonSFX();
+        settingsUI.SetActive(true);
+    }
+
+    public void CloseSettings()
+    {
+        PlayButtonSFX();
+        settingsUI.SetActive(false);
+    }
+
+    public void ShowMedalForScore()
+    {
+        if (medalImage == null) return;
+
+        int finalScore = ScoreManager.Instance.GetScore();
+
+        if (finalScore >= goldScore)
+            medalImage.sprite = goldMedal;
+        else if (finalScore >= silverScore)
+            medalImage.sprite = silverMedal;
+        else if (finalScore >= bronzeScore)
+            medalImage.sprite = bronzeMedal;
+        else
+            medalImage.enabled = false; // hide if no medal earned
     }
 }
